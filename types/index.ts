@@ -1,7 +1,9 @@
 // Core domain models
 export interface Player {
-  id: string;
+  id: string; // Firebase Auth UID
   name: string;
+  photoURL?: string; // Google profile photo
+  isAnonymous: boolean; // true for guest users
   joinedAt: number;
   gamesPlayed: number;
   satOutLast: number;
@@ -92,9 +94,9 @@ export interface UseRoomResult {
   currentPlayer: Player | null;
   pendingInvites: InviteWithId[];
 
-  // Actions
-  createRoom: (playerName: string) => Promise<string>;
-  joinRoom: (code: string, playerName: string) => Promise<boolean>;
+  // Actions (playerName is now optional - uses Firebase Auth displayName)
+  createRoom: (playerName?: string) => Promise<string>;
+  joinRoom: (code: string, playerName?: string) => Promise<boolean>;
   leaveRoom: () => Promise<void>;
   sendInvite: (toPlayerId: string) => Promise<void>;
   acceptInvite: (inviteId: string) => Promise<void>;

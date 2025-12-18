@@ -11,40 +11,20 @@ export function generateRoomCode(): string {
 }
 
 /**
- * Get or create player ID from localStorage
- * Uses nanoid for unique, URL-safe identifiers
+ * Create player object from Firebase Auth user
  */
-export function getPlayerId(): string {
-  if (typeof window === 'undefined') {
-    return ''; // Server-side rendering guard
-  }
-
-  let id = localStorage.getItem('playerId');
-  if (!id) {
-    id = nanoid(10);
-    localStorage.setItem('playerId', id);
-  }
-  return id;
-}
-
-/**
- * Get player name from localStorage
- */
-export function getPlayerName(): string | null {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-  return localStorage.getItem('playerName');
-}
-
-/**
- * Save player name to localStorage
- */
-export function setPlayerName(name: string): void {
-  if (typeof window === 'undefined') {
-    return;
-  }
-  localStorage.setItem('playerName', name);
+export function createPlayerFromAuth(
+  uid: string,
+  displayName: string | null,
+  photoURL: string | null,
+  isAnonymous: boolean
+): Omit<Player, 'gamesPlayed' | 'satOutLast' | 'wins' | 'losses' | 'joinedAt'> {
+  return {
+    id: uid,
+    name: displayName || (isAnonymous ? 'Гість' : 'Гравець'),
+    photoURL: photoURL || undefined,
+    isAnonymous,
+  };
 }
 
 /**

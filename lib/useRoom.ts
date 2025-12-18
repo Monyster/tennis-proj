@@ -17,15 +17,15 @@ import {
 } from '@/types';
 import {
   generateRoomCode,
-  getPlayerId,
-  setPlayerName,
   generateTeamId,
   generateInviteId,
   normalizeRoomCode,
   createRandomTeams,
   whoStays,
   findPlayerTeam,
+  createPlayerFromAuth,
 } from './utils';
+import { useAuth } from './useAuth';
 
 /**
  * Custom hook for managing room state and operations
@@ -35,7 +35,8 @@ export function useRoom(roomCode: string | null): UseRoomResult {
   const [room, setRoom] = useState<Room | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const playerId = useMemo(() => getPlayerId(), []);
+  const { user } = useAuth();
+  const playerId = user?.uid || '';
 
   // Derived state
   const currentPlayer = room?.players?.[playerId] ?? null;
@@ -95,16 +96,26 @@ export function useRoom(roomCode: string | null): UseRoomResult {
   /**
    * Create a new room
    * Returns the room code
+   * Requires user to be authenticated
    */
-  const createRoom = useCallback(async (playerName: string): Promise<string> => {
+  const createRoom = useCallback(async (playerName?: string): Promise<string> => {
+    if (!user) {
+      throw new Error('Потрібна авторизація для створення кімнати');
+    }
+
     const code = generateRoomCode();
     const normalized = normalizeRoomCode(code);
-    const pid = getPlayerId();
     const now = Date.now();
 
+    const playerData = createPlayerFromAuth(
+      user.uid,
+      playerName || user.displayName,
+      user.photoURL,
+      user.isAnonymous
+    );
+
     const newPlayer: Player = {
-      id: pid,
-      name: playerName,
+      ...playerData,
       joinedAt: now,
       gamesPlayed: 0,
       satOutLast: 0,
@@ -116,8 +127,8 @@ export function useRoom(roomCode: string | null): UseRoomResult {
       code: normalized,
       status: 'lobby',
       createdAt: now,
-      hostId: pid,
-      players: { [pid]: newPlayer },
+      hostId: user.uid,
+      players: { [user.uid]: newPlayer },
       teams: {},
       match: null,
       queue: [],
@@ -132,17 +143,21 @@ export function useRoom(roomCode: string | null): UseRoomResult {
 
     const roomRef = ref(db, `rooms/${normalized}`);
     await set(roomRef, newRoom);
-    setPlayerName(playerName);
 
     return code;
-  }, []);
+  }, [user]);
 
   /**
    * Join an existing room
    * Returns true if successful
+   * Requires user to be authenticated
    */
   const joinRoom = useCallback(
-    async (code: string, playerName: string): Promise<boolean> => {
+    async (code: string, playerName?: string): Promise<boolean> => {
+      if (!user) {
+        throw new Error('Потрібна авторизація для приєднання до кімнати');
+      }
+
       const normalized = normalizeRoomCode(code);
       const roomRef = ref(db, `rooms/${normalized}`);
       const snapshot = await get(roomRef);
@@ -153,18 +168,22 @@ export function useRoom(roomCode: string | null): UseRoomResult {
       }
 
       const roomData = snapshot.val() as Room;
-      const pid = getPlayerId();
 
       // Check if player already in room
-      if (roomData.players[pid]) {
-        setPlayerName(playerName);
+      if (roomData.players[user.uid]) {
         return true;
       }
 
       const now = Date.now();
+      const playerData = createPlayerFromAuth(
+        user.uid,
+        playerName || user.displayName,
+        user.photoURL,
+        user.isAnonymous
+      );
+
       const newPlayer: Player = {
-        id: pid,
-        name: playerName,
+        ...playerData,
         joinedAt: now,
         gamesPlayed: 0,
         satOutLast: 0,
@@ -173,7 +192,7 @@ export function useRoom(roomCode: string | null): UseRoomResult {
       };
 
       const updates: Record<string, unknown> = {
-        [`players/${pid}`]: newPlayer,
+        [`players/${user.uid}`]: newPlayer,
       };
 
       // If lobby, add to beginning of queue or bench if odd number
@@ -181,50 +200,48 @@ export function useRoom(roomCode: string | null): UseRoomResult {
         const playerCount = Object.keys(roomData.players).length + 1;
         if (playerCount % 2 === 1) {
           // Odd number: goes to bench
-          updates['bench'] = [...(roomData.bench || []), pid];
+          updates['bench'] = [...(roomData.bench || []), user.uid];
         }
       } else {
         // Game in progress: add to queue start or bench if odd
         const playerCount = Object.keys(roomData.players).length + 1;
         if (playerCount % 2 === 1) {
-          updates['bench'] = [...(roomData.bench || []), pid];
+          updates['bench'] = [...(roomData.bench || []), user.uid];
         } else {
-          updates['queue'] = [pid, ...(roomData.queue || [])];
+          updates['queue'] = [user.uid, ...(roomData.queue || [])];
         }
       }
 
       await update(roomRef, updates);
-      setPlayerName(playerName);
       return true;
     },
-    []
+    [user]
   );
 
   /**
    * Leave the room
    */
   const leaveRoom = useCallback(async (): Promise<void> => {
-    if (!room) return;
+    if (!room || !user) return;
 
-    const pid = getPlayerId();
     const roomRef = ref(db, `rooms/${room.code}`);
     const updates: Record<string, unknown> = {};
 
     // Remove player
-    updates[`players/${pid}`] = null;
+    updates[`players/${user.uid}`] = null;
 
     // Remove from bench if present
-    if (room.bench.includes(pid)) {
-      updates['bench'] = room.bench.filter((id) => id !== pid);
+    if (room.bench.includes(user.uid)) {
+      updates['bench'] = room.bench.filter((id) => id !== user.uid);
     }
 
     // Remove from queue if present
-    if (room.queue.includes(pid)) {
-      updates['queue'] = room.queue.filter((id) => id !== pid);
+    if (room.queue.includes(user.uid)) {
+      updates['queue'] = room.queue.filter((id) => id !== user.uid);
     }
 
     // Remove team if player is in one
-    const playerTeamId = findPlayerTeam(pid, room.teams);
+    const playerTeamId = findPlayerTeam(user.uid, room.teams);
     if (playerTeamId) {
       updates[`teams/${playerTeamId}`] = null;
       updates['queue'] = room.queue.filter((id) => id !== playerTeamId);
@@ -232,26 +249,25 @@ export function useRoom(roomCode: string | null): UseRoomResult {
 
     // Remove any invites involving this player
     Object.entries(room.invites || {}).forEach(([inviteId, invite]) => {
-      if (invite.fromPlayerId === pid || invite.toPlayerId === pid) {
+      if (invite.fromPlayerId === user.uid || invite.toPlayerId === user.uid) {
         updates[`invites/${inviteId}`] = null;
       }
     });
 
     await update(roomRef, updates);
-  }, [room]);
+  }, [room, user]);
 
   /**
    * Send invite to another player to form a team
    */
   const sendInvite = useCallback(
     async (toPlayerId: string): Promise<void> => {
-      if (!room) return;
+      if (!room || !user) return;
 
-      const pid = getPlayerId();
       const inviteId = generateInviteId();
 
       const newInvite: Invite = {
-        fromPlayerId: pid,
+        fromPlayerId: user.uid,
         toPlayerId,
         createdAt: Date.now(),
       };
@@ -261,7 +277,7 @@ export function useRoom(roomCode: string | null): UseRoomResult {
         [`invites/${inviteId}`]: newInvite,
       });
     },
-    [room]
+    [room, user]
   );
 
   /**
@@ -269,18 +285,17 @@ export function useRoom(roomCode: string | null): UseRoomResult {
    */
   const acceptInvite = useCallback(
     async (inviteId: string): Promise<void> => {
-      if (!room) return;
+      if (!room || !user) return;
 
       const invite = room.invites[inviteId];
       if (!invite) return;
 
-      const pid = getPlayerId();
       const teamId = generateTeamId();
 
       const newTeam: Team = {
         id: teamId,
         player1Id: invite.fromPlayerId,
-        player2Id: pid,
+        player2Id: user.uid,
       };
 
       const roomRef = ref(db, `rooms/${room.code}`);
@@ -290,15 +305,15 @@ export function useRoom(roomCode: string | null): UseRoomResult {
       };
 
       // Remove both players from bench
-      if (room.bench.includes(pid) || room.bench.includes(invite.fromPlayerId)) {
+      if (room.bench.includes(user.uid) || room.bench.includes(invite.fromPlayerId)) {
         updates['bench'] = room.bench.filter(
-          (id) => id !== pid && id !== invite.fromPlayerId
+          (id) => id !== user.uid && id !== invite.fromPlayerId
         );
       }
 
       await update(roomRef, updates);
     },
-    [room]
+    [room, user]
   );
 
   /**
@@ -525,9 +540,8 @@ export function useRoom(roomCode: string | null): UseRoomResult {
    */
   const voteResult = useCallback(
     async (result: MatchResult): Promise<void> => {
-      if (!room || !room.match) return;
+      if (!room || !room.match || !user) return;
 
-      const pid = getPlayerId();
       const roomRef = ref(db, `rooms/${room.code}`);
       const requiredVotes = Math.ceil(Object.keys(room.players).length * VOTE_THRESHOLD);
 
@@ -536,10 +550,10 @@ export function useRoom(roomCode: string | null): UseRoomResult {
 
       if (room.votes.pendingResult !== result) {
         // New vote started
-        voters = { [pid]: true };
+        voters = { [user.uid]: true };
       } else {
         // Add vote to existing
-        voters[pid] = true;
+        voters[user.uid] = true;
       }
 
       const voteCount = Object.keys(voters).length;
@@ -556,7 +570,7 @@ export function useRoom(roomCode: string | null): UseRoomResult {
         });
       }
     },
-    [room, processMatchResult]
+    [room, user, processMatchResult]
   );
 
   return {

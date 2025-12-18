@@ -26,16 +26,35 @@ export function PlayerCard({
       }`}
     >
       <div className="flex items-center justify-between">
-        <div>
-          <p className="font-medium text-gray-900">
-            {player.name}
-            {isCurrentPlayer && (
-              <span className="ml-2 text-xs text-blue-600">(ти)</span>
-            )}
-          </p>
-          <p className="text-sm text-gray-600">
-            Ігор: {player.gamesPlayed} | В: {player.wins} | П: {player.losses}
-          </p>
+        <div className="flex items-center gap-3">
+          {player.photoURL ? (
+            <img
+              src={player.photoURL}
+              alt={player.name}
+              className="h-10 w-10 rounded-full"
+            />
+          ) : (
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-300 text-sm font-medium text-gray-700">
+              {player.isAnonymous ? '?' : player.name[0]?.toUpperCase()}
+            </div>
+          )}
+
+          <div>
+            <div className="flex items-center gap-2">
+              <p className="font-medium text-gray-900">
+                {player.name}
+              </p>
+              {player.isAnonymous && (
+                <span className="text-xs text-amber-600">(гість)</span>
+              )}
+              {isCurrentPlayer && (
+                <span className="text-xs text-blue-600">(ти)</span>
+              )}
+            </div>
+            <p className="text-sm text-gray-600">
+              Ігор: {player.gamesPlayed} | В: {player.wins} | П: {player.losses}
+            </p>
+          </div>
         </div>
 
         {showInviteButton && onInvite && !isCurrentPlayer && (

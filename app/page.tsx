@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { CreateRoom } from '@/components/CreateRoom';
 import { JoinRoom } from '@/components/JoinRoom';
 import { useRoom } from '@/lib/useRoom';
+import AuthGuard from '@/components/AuthGuard';
+import UserProfile from '@/components/UserProfile';
 
 /**
  * Main landing page
@@ -15,7 +17,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const { createRoom, joinRoom } = useRoom(null);
 
-  const handleCreateRoom = async (playerName: string) => {
+  const handleCreateRoom = async (playerName?: string) => {
     setIsLoading(true);
     try {
       const code = await createRoom(playerName);
@@ -26,7 +28,7 @@ export default function Home() {
     }
   };
 
-  const handleJoinRoom = async (code: string, playerName: string) => {
+  const handleJoinRoom = async (code: string, playerName?: string) => {
     setIsLoading(true);
     try {
       const success = await joinRoom(code, playerName);
@@ -42,14 +44,20 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="text-6xl mb-4">🏓</div>
-          <h1 className="text-4xl font-bold text-gray-900">Пінг-Понг</h1>
-          <p className="text-xl text-gray-600">з Друзями</p>
-        </div>
+    <AuthGuard>
+      <div className="min-h-screen bg-linear-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md space-y-8">
+          {/* User Profile in top-right */}
+          <div className="flex justify-end">
+            <UserProfile />
+          </div>
+
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <div className="text-6xl mb-4">🏓</div>
+            <h1 className="text-4xl font-bold text-gray-900">Пінг-Понг</h1>
+            <p className="text-xl text-gray-600">з Друзями</p>
+          </div>
 
         {/* Create Room */}
         <div className="bg-white rounded-lg shadow-lg p-6 space-y-4">
@@ -87,7 +95,8 @@ export default function Home() {
         <p className="text-center text-sm text-gray-500">
           Грайте в настільний теніс 2 на 2 з друзями
         </p>
+        </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 }

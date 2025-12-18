@@ -1,5 +1,6 @@
 import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
 import { Database, getDatabase } from 'firebase/database';
+import { Auth, getAuth } from 'firebase/auth';
 
 // Firebase configuration from environment variables
 const firebaseConfig = {
@@ -15,6 +16,7 @@ const firebaseConfig = {
 // Singleton pattern for Firebase initialization
 let app: FirebaseApp;
 let database: Database;
+let auth: Auth;
 
 /**
  * Initialize Firebase app (only once)
@@ -50,6 +52,18 @@ export function getFirebaseDatabase(): Database {
   return database;
 }
 
+/**
+ * Get Firebase Auth instance
+ */
+export function getFirebaseAuth(): Auth {
+  if (!auth) {
+    const app = getFirebaseApp();
+    auth = getAuth(app);
+  }
+  return auth;
+}
+
 // Export initialized instances
 export const firebaseApp = getFirebaseApp();
 export const db = getFirebaseDatabase();
+export const firebaseAuth = getFirebaseAuth();
