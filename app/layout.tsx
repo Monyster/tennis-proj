@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Пінг-Понг з Друзями",
-  description: "Дружня гра в настільний теніс 2 на 2 з системою ротації",
+  title: "Handicap - Настільний теніс з форою",
+  description: "Настільний теніс 2 на 2 з автоматичною форою та системою ротації",
 };
 
 export default function RootLayout({

@@ -54,9 +54,9 @@ export default function Home() {
 
           {/* Header */}
           <div className="text-center space-y-2">
-            <div className="text-6xl mb-4">🏓</div>
-            <h1 className="text-4xl font-bold text-gray-900">Пінг-Понг</h1>
-            <p className="text-xl text-gray-600">з Друзями</p>
+            <div className="text-6xl mb-4">🎯</div>
+            <h1 className="text-4xl font-bold text-gray-900">Handicap</h1>
+            <p className="text-xl text-gray-600">Настільний теніс з форою</p>
           </div>
 
         {/* Create Room */}
@@ -93,7 +93,7 @@ export default function Home() {
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-500">
-          Грайте в настільний теніс 2 на 2 з друзями
+          Настільний теніс з автоматичною форою для чесної гри
         </p>
         </div>
       </div>

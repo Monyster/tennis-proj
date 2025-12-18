@@ -1,30 +1,37 @@
 'use client';
 
 import { useState } from 'react';
-import { Room, MatchResult, VOTE_THRESHOLD, getHandicap } from '@/types';
-import { TeamCard } from './TeamCard';
+import { Room, MatchResult, VOTE_THRESHOLD } from '@/types';
 import { VoteButtons } from './VoteButtons';
-import { Queue } from './Queue';
-import { Bench } from './Bench';
 import { Stats } from './Stats';
+import TableView from './TableView';
+import Tribunes from './Tribunes';
+import UserProfile from './UserProfile';
 
 interface GameProps {
   room: Room;
   playerId: string;
   onVoteResult: (result: MatchResult) => void;
+  onIncrementScore: (team: 'champions' | 'challengers') => void;
   onCopyRoomCode: () => void;
 }
 
 /**
- * Game component - displays active match and allows voting
+ * Game component - displays active match with table visualization
  */
-export function Game({ room, playerId, onVoteResult, onCopyRoomCode }: GameProps) {
+export function Game({
+  room,
+  playerId,
+  onVoteResult,
+  onIncrementScore,
+  onCopyRoomCode
+}: GameProps) {
   const [showStats, setShowStats] = useState(false);
 
   if (!room.match) {
     return (
-      <div className="max-w-2xl mx-auto p-6">
-        <p className="text-center text-gray-600">Матч не активний</p>
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-4">
+        <p className="text-center text-gray-600 mt-20">Матч не активний</p>
       </div>
     );
   }
@@ -34,91 +41,80 @@ export function Game({ room, playerId, onVoteResult, onCopyRoomCode }: GameProps
 
   if (!championsTeam || !challengersTeam) {
     return (
-      <div className="max-w-2xl mx-auto p-6">
-        <p className="text-center text-red-600">Помилка: команди не знайдено</p>
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-4">
+        <p className="text-center text-red-600 mt-20">Помилка: команди не знайдено</p>
       </div>
     );
   }
 
-  const handicap = getHandicap(room.match.championWinStreak);
   const totalPlayers = Object.keys(room.players).length;
   const requiredVotes = Math.ceil(totalPlayers * VOTE_THRESHOLD);
   const hasVoted = room.votes?.voters?.[playerId] === true;
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Header */}
-      <div className="bg-white rounded-lg shadow p-4">
-        <div className="flex items-center justify-between">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+        <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">{room.code}</h1>
-            <p className="text-sm text-gray-600">
-              Гравців: {totalPlayers}
+            <h1 className="text-lg font-bold text-gray-900">{room.code}</h1>
+            <p className="text-xs text-gray-600">
+              {totalPlayers} {totalPlayers === 1 ? 'гравець' : 'гравців'}
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setShowStats(true)}
-              className="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors"
+              className="p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+              aria-label="Статистика"
             >
-              📊 Статистика
+              📊
             </button>
             <button
               onClick={onCopyRoomCode}
-              className="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors"
+              className="p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
+              aria-label="Копіювати код"
             >
-              Копіювати
+              📋
             </button>
+            <UserProfile />
           </div>
         </div>
       </div>
 
-      {/* Champions Team */}
-      <TeamCard
-        team={championsTeam}
-        players={room.players}
-        variant="champions"
-        winStreak={room.match.championWinStreak}
-      />
-
-      {/* VS Divider */}
-      <div className="text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full">
-          <span className="text-2xl font-bold text-gray-600">VS</span>
-        </div>
-      </div>
-
-      {/* Challengers Team */}
-      <TeamCard
-        team={challengersTeam}
-        players={room.players}
-        variant="challengers"
-        handicap={handicap}
-        servingTeam={room.match.servingTeam === 'challengers'}
-      />
-
-      {/* Voting */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <VoteButtons
-          votes={room.votes}
-          requiredVotes={requiredVotes}
-          onVote={onVoteResult}
-          hasVoted={hasVoted}
+      {/* Main Content */}
+      <div className="pb-6">
+        {/* Table Visualization */}
+        <TableView
+          championsTeam={championsTeam}
+          challengersTeam={challengersTeam}
+          players={room.players}
+          match={room.match}
+          onIncrementScore={onIncrementScore}
         />
-      </div>
 
-      {/* Queue and Bench */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {room.queue.length > 0 && (
-          <Queue
-            queue={room.queue}
-            teams={room.teams || {}}
-            players={room.players}
-          />
-        )}
-        {room.bench.length > 0 && (
-          <Bench bench={room.bench} players={room.players} />
-        )}
+        {/* Tribunes (Queue & Bench) */}
+        <Tribunes
+          queue={room.queue}
+          bench={room.bench}
+          players={room.players}
+          teams={room.teams || {}}
+        />
+
+        {/* Voting Section */}
+        <div className="max-w-md mx-auto px-4 mt-6">
+          <div className="bg-white rounded-lg shadow-md p-4">
+            <div className="text-sm text-gray-600 mb-3 text-center">
+              Якщо рахунок неправильний, проголосуйте за переможця:
+            </div>
+            <VoteButtons
+              votes={room.votes}
+              requiredVotes={requiredVotes}
+              onVote={onVoteResult}
+              hasVoted={hasVoted}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Stats Modal */}

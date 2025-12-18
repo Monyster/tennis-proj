@@ -387,6 +387,8 @@ export function useRoom(roomCode: string | null): UseRoomResult {
       challengersTeamId: challengersTeam.id,
       championWinStreak: 0,
       servingTeam: 'champions',
+      championsScore: 0,
+      challengersScore: 0,
     };
 
     updates['match'] = match;
@@ -518,6 +520,8 @@ export function useRoom(roomCode: string | null): UseRoomResult {
       challengersTeamId: newChallengersTeamId,
       championWinStreak: newWinStreak,
       servingTeam: newServingTeam,
+      championsScore: 0,
+      challengersScore: 0,
     };
 
     updates['match'] = newMatch;
@@ -573,6 +577,65 @@ export function useRoom(roomCode: string | null): UseRoomResult {
     [room, user, processMatchResult]
   );
 
+  /**
+   * Increment score for a team
+   * Handles serving team changes and automatic game completion
+   */
+  const incrementScore = useCallback(
+    async (team: 'champions' | 'challengers'): Promise<void> => {
+      if (!room || !room.match) return;
+
+      const roomRef = ref(db, `rooms/${room.code}`);
+      const match = room.match;
+
+      const newChampionsScore =
+        team === 'champions' ? match.championsScore + 1 : match.championsScore;
+      const newChallengersScore =
+        team === 'challengers' ? match.challengersScore + 1 : match.challengersScore;
+
+      // Calculate total scores including handicap
+      const handicap = match.championWinStreak * 2;
+      const championsTotal = newChampionsScore;
+      const challengersTotal = newChallengersScore + handicap;
+
+      // Determine serving team based on total points
+      const totalPoints = newChampionsScore + newChallengersScore;
+      let newServingTeam = match.servingTeam;
+
+      // Check if we're in deuce (10:10 or more)
+      const isDeuce = championsTotal >= 10 && challengersTotal >= 10;
+
+      if (isDeuce) {
+        // In deuce, serving changes every point
+        newServingTeam = match.servingTeam === 'champions' ? 'challengers' : 'champions';
+      } else {
+        // Normal game: serving changes every 2 points
+        const servingChange = Math.floor(totalPoints / 2);
+        newServingTeam = servingChange % 2 === 0 ? 'champions' : 'challengers';
+      }
+
+      const updates: Record<string, unknown> = {
+        'match/championsScore': newChampionsScore,
+        'match/challengersScore': newChallengersScore,
+        'match/servingTeam': newServingTeam,
+      };
+
+      await update(roomRef, updates);
+
+      // Check for game completion (11 points with 2+ point lead)
+      if (championsTotal >= 11 || challengersTotal >= 11) {
+        const diff = Math.abs(championsTotal - challengersTotal);
+        if (diff >= 2) {
+          // Game completed - trigger voting automatically
+          const winner = championsTotal > challengersTotal ? 'champions' : 'challengers';
+          // Auto-process result without voting for score-based completion
+          await processMatchResult(room, winner);
+        }
+      }
+    },
+    [room, processMatchResult]
+  );
+
   return {
     room,
     loading,
@@ -588,5 +651,6 @@ export function useRoom(roomCode: string | null): UseRoomResult {
     declineInvite,
     startGame,
     voteResult,
+    incrementScore,
   };
 }

@@ -26,6 +26,7 @@ export default function RoomPage({ params }: PageProps) {
     playerId,
     startGame,
     voteResult,
+    incrementScore,
     sendInvite,
     acceptInvite,
     declineInvite,
@@ -68,6 +69,14 @@ export default function RoomPage({ params }: PageProps) {
     }
   };
 
+  const handleIncrementScore = async (team: 'champions' | 'challengers') => {
+    try {
+      await incrementScore(team);
+    } catch (err) {
+      console.error('Error incrementing score:', err);
+    }
+  };
+
   const handleSendInvite = async (toPlayerId: string) => {
     try {
       await sendInvite(toPlayerId);
@@ -99,7 +108,7 @@ export default function RoomPage({ params }: PageProps) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl mb-4">🏓</div>
+          <div className="text-4xl mb-4">🎯</div>
           <p className="text-gray-600">Завантаження...</p>
         </div>
       </div>
@@ -154,6 +163,7 @@ export default function RoomPage({ params }: PageProps) {
           room={room}
           playerId={playerId}
           onVoteResult={handleVoteResult}
+          onIncrementScore={handleIncrementScore}
           onCopyRoomCode={handleCopyRoomCode}
         />
       )}

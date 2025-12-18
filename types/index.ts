@@ -22,6 +22,8 @@ export interface Match {
   challengersTeamId: string;
   championWinStreak: number;
   servingTeam: 'champions' | 'challengers';
+  championsScore: number;
+  challengersScore: number;
 }
 
 export interface Vote {
@@ -103,6 +105,7 @@ export interface UseRoomResult {
   declineInvite: (inviteId: string) => Promise<void>;
   startGame: () => Promise<void>;
   voteResult: (result: MatchResult) => Promise<void>;
+  incrementScore: (team: 'champions' | 'challengers') => Promise<void>;
 }
 
 // Rotation logic types

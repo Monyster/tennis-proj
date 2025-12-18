@@ -12,6 +12,7 @@ export function generateRoomCode(): string {
 
 /**
  * Create player object from Firebase Auth user
+ * Firebase doesn't accept undefined, so we conditionally include photoURL
  */
 export function createPlayerFromAuth(
   uid: string,
@@ -19,12 +20,18 @@ export function createPlayerFromAuth(
   photoURL: string | null,
   isAnonymous: boolean
 ): Omit<Player, 'gamesPlayed' | 'satOutLast' | 'wins' | 'losses' | 'joinedAt'> {
-  return {
+  const player: any = {
     id: uid,
     name: displayName || (isAnonymous ? 'Гість' : 'Гравець'),
-    photoURL: photoURL || undefined,
     isAnonymous,
   };
+
+  // Only include photoURL if it exists (Firebase doesn't accept undefined)
+  if (photoURL) {
+    player.photoURL = photoURL;
+  }
+
+  return player;
 }
 
 /**
