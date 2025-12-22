@@ -27,62 +27,43 @@ export function InviteModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900 bg-opacity-75">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+        <div className="text-center mb-6">
+          <div className="text-5xl mb-3">🤝</div>
+          <h2 className="text-2xl font-bold text-gray-900">
             Запрошення до команди
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 focus:outline-none"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
         </div>
 
-        <div className="space-y-3">
-          {invites.map((invite) => {
+        <div className="space-y-4">
+          {invites.map((invite, index) => {
             const fromPlayer = players[invite.fromPlayerId];
             if (!fromPlayer) return null;
 
             return (
               <div
                 key={invite.id}
-                className="p-4 bg-blue-50 rounded-lg border border-blue-200"
+                className="p-5 bg-blue-50 rounded-xl border-2 border-blue-200 shadow-sm"
               >
-                <p className="text-sm text-gray-900 mb-3">
-                  <span className="font-medium">{fromPlayer.name}</span>{' '}
+                <p className="text-base text-gray-900 mb-4 text-center">
+                  <span className="font-bold text-blue-700">{fromPlayer.name}</span>{' '}
                   запрошує вас до команди
                 </p>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <button
                     onClick={() => {
                       onAccept(invite.id);
-                      if (invites.length === 1) onClose();
                     }}
-                    className="flex-1 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
+                    className="flex-1 px-5 py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all shadow-md hover:shadow-lg"
                   >
                     Прийняти
                   </button>
                   <button
                     onClick={() => {
                       onDecline(invite.id);
-                      if (invites.length === 1) onClose();
                     }}
-                    className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors"
+                    className="flex-1 px-5 py-3 bg-gray-300 text-gray-800 font-semibold rounded-xl hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all shadow-sm"
                   >
                     Відхилити
                   </button>

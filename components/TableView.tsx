@@ -74,8 +74,8 @@ export default function TableView({
   }) => (
     <div className="flex flex-col items-center gap-1 relative">
       {isServing && (
-        <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md z-10 whitespace-nowrap">
-          🏓 ПОДАЄ
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-orange-400 text-orange-900 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md z-10 whitespace-nowrap">
+          ПОДАЄ
         </div>
       )}
       {player.photoURL ? (
@@ -83,13 +83,13 @@ export default function TableView({
           src={player.photoURL}
           alt={player.name}
           className={`h-12 w-12 rounded-full border-2 shadow-md ${
-            isServing ? 'border-yellow-400 ring-2 ring-yellow-300' : 'border-white'
+            isServing ? 'border-orange-400 ring-2 ring-orange-300' : 'border-white'
           }`}
         />
       ) : (
         <div className={`flex h-12 w-12 items-center justify-center rounded-full border-2 shadow-md text-sm font-medium ${
           isServing
-            ? 'border-yellow-400 ring-2 ring-yellow-300 bg-yellow-100 text-yellow-900'
+            ? 'border-orange-400 ring-2 ring-orange-300 bg-orange-100 text-orange-900'
             : 'border-white bg-gray-300 text-gray-700'
         }`}>
           {player.isAnonymous ? '?' : player.name[0]?.toUpperCase()}
@@ -108,13 +108,13 @@ export default function TableView({
         <div className="flex items-center justify-between gap-4">
           {/* Champions Score */}
           <div className="flex-1 text-center">
-            <div className="text-xs text-amber-300 mb-1 font-semibold">
+            <div className="text-xs text-orange-300 mb-1 font-semibold">
               ЧЕМПІОНИ {match.championWinStreak > 0 && `(${match.championWinStreak})`}
             </div>
             <div className="flex items-center justify-center gap-2">
               <button
                 onClick={() => onIncrementScore('champions')}
-                className="bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-full h-8 w-8 flex items-center justify-center shadow-md transition"
+                className="bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full h-8 w-8 flex items-center justify-center shadow-md transition"
               >
                 +
               </button>
@@ -158,7 +158,7 @@ export default function TableView({
 
         {/* Serving indicator */}
         <div className="mt-3 text-center text-xs text-gray-400">
-          {match.servingTeam === 'champions' ? '🏓 Подають чемпіони' : '🏓 Подають претенденти'}
+          {match.servingTeam === 'champions' ? 'Подають чемпіони' : 'Подають претенденти'}
         </div>
       </div>
 
@@ -181,9 +181,9 @@ export default function TableView({
         </div>
 
         {/* Player positions */}
-        {/* Champions - Top side (amber) */}
+        {/* Champions - Top side (orange) */}
         <div className="absolute -top-20 left-1/4 -translate-x-1/2">
-          <div className="bg-amber-100 px-3 py-2 rounded-lg shadow-md">
+          <div className="bg-orange-100 px-3 py-2 rounded-lg shadow-md">
             <PlayerAvatar
               player={champion1}
               isServing={isChampionsServing && championServingPlayerIndex === 0}
@@ -191,7 +191,7 @@ export default function TableView({
           </div>
         </div>
         <div className="absolute -top-20 right-1/4 translate-x-1/2">
-          <div className="bg-amber-100 px-3 py-2 rounded-lg shadow-md">
+          <div className="bg-orange-100 px-3 py-2 rounded-lg shadow-md">
             <PlayerAvatar
               player={champion2}
               isServing={isChampionsServing && championServingPlayerIndex === 1}

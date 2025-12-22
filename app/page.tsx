@@ -17,10 +17,10 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const { createRoom, joinRoom } = useRoom(null);
 
-  const handleCreateRoom = async (playerName?: string) => {
+  const handleCreateRoom = async () => {
     setIsLoading(true);
     try {
-      const code = await createRoom(playerName);
+      const code = await createRoom();
       router.push(`/room/${code}`);
     } catch (error) {
       console.error('Error creating room:', error);
@@ -28,10 +28,10 @@ export default function Home() {
     }
   };
 
-  const handleJoinRoom = async (code: string, playerName?: string) => {
+  const handleJoinRoom = async (code: string) => {
     setIsLoading(true);
     try {
-      const success = await joinRoom(code, playerName);
+      const success = await joinRoom(code);
       if (success) {
         router.push(`/room/${code}`);
       } else {

@@ -87,14 +87,14 @@ export function Stats({ players, isOpen, onClose }: StatsProps) {
                     key={player.id}
                     className={`${
                       index === 0 && totalGames > 0
-                        ? 'bg-yellow-50'
+                        ? 'bg-orange-50'
                         : 'hover:bg-gray-50'
                     }`}
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         {index === 0 && totalGames > 0 && (
-                          <span className="text-lg">🏆</span>
+                          <span className="text-xs font-bold text-orange-600 uppercase">Лідер</span>
                         )}
                         <span className="font-medium text-gray-900">
                           {player.name}
@@ -104,20 +104,20 @@ export function Stats({ players, isOpen, onClose }: StatsProps) {
                     <td className="px-4 py-3 text-center text-gray-700">
                       {player.gamesPlayed}
                     </td>
-                    <td className="px-4 py-3 text-center text-green-600 font-medium">
+                    <td className="px-4 py-3 text-center text-success-600 font-medium">
                       {player.wins}
                     </td>
-                    <td className="px-4 py-3 text-center text-red-600 font-medium">
+                    <td className="px-4 py-3 text-center text-error-600 font-medium">
                       {player.losses}
                     </td>
                     <td className="px-4 py-3 text-center">
                       <span
                         className={`font-semibold ${
                           winPercentage >= 60
-                            ? 'text-green-600'
+                            ? 'text-success-600'
                             : winPercentage >= 40
                             ? 'text-gray-700'
-                            : 'text-red-600'
+                            : 'text-error-600'
                         }`}
                       >
                         {totalGames > 0 ? `${winPercentage}%` : '-'}

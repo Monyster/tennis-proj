@@ -1,10 +1,13 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRoom } from '@/lib/useRoom';
+import { useAuth } from '@/lib/useAuth';
 import { Lobby } from '@/components/Lobby';
 import { Game } from '@/components/Game';
+import { Drawer } from '@/components/Drawer';
+import { RoomJoinModal } from '@/components/RoomJoinModal';
 import { MatchResult } from '@/types';
 
 interface PageProps {
@@ -18,6 +21,9 @@ interface PageProps {
 export default function RoomPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [hasAttemptedJoin, setHasAttemptedJoin] = useState(false);
 
   const {
     room,
@@ -31,6 +37,7 @@ export default function RoomPage({ params }: PageProps) {
     acceptInvite,
     declineInvite,
     leaveRoom,
+    joinRoom,
   } = useRoom(resolvedParams.code);
 
   const handleCopyRoomCode = async () => {
@@ -77,6 +84,45 @@ export default function RoomPage({ params }: PageProps) {
     }
   };
 
+  const handleJoinRoom = async () => {
+    try {
+      setHasAttemptedJoin(true);
+      const success = await joinRoom(resolvedParams.code);
+      if (success) {
+        setShowJoinModal(false);
+      }
+    } catch (err) {
+      console.error('Error joining room:', err);
+      throw err; // Re-throw to show in modal
+    }
+  };
+
+  const handleCancelJoin = () => {
+    router.push('/');
+  };
+
+  // Check if user needs to join the room
+  useEffect(() => {
+    if (authLoading || loading) return;
+
+    if (room) {
+      if (!user) {
+        // No user authenticated - show modal to auth and join
+        if (!showJoinModal) {
+          setShowJoinModal(true);
+        }
+      } else if (!room.players[user.uid] && !hasAttemptedJoin) {
+        // User is authenticated but not in the room - show join modal
+        if (!showJoinModal) {
+          setShowJoinModal(true);
+        }
+      } else if (room.players[user.uid] && showJoinModal) {
+        // User is already in the room - hide modal
+        setShowJoinModal(false);
+      }
+    }
+  }, [user, room, authLoading, loading, hasAttemptedJoin, showJoinModal]);
+
   const handleSendInvite = async (toPlayerId: string) => {
     try {
       await sendInvite(toPlayerId);
@@ -103,8 +149,19 @@ export default function RoomPage({ params }: PageProps) {
     }
   };
 
+  // Show join modal if user needs to join
+  if (showJoinModal && room) {
+    return (
+      <RoomJoinModal
+        roomCode={room.code}
+        onJoin={handleJoinRoom}
+        onCancel={handleCancelJoin}
+      />
+    );
+  }
+
   // Loading state
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -137,14 +194,23 @@ export default function RoomPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Leave button */}
-      <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-4 py-3">
-        <button
-          onClick={handleLeaveRoom}
-          className="text-sm text-red-600 hover:text-red-700 focus:outline-none"
-        >
-          ← Вийти з кімнати
-        </button>
+      {/* Header with drawer */}
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+        <div className="px-4 py-3 flex items-center justify-between">
+          <Drawer
+            room={room}
+            onLeaveRoom={handleLeaveRoom}
+            onCopyRoomCode={handleCopyRoomCode}
+          />
+          <div className="flex-1 text-center">
+            <h1 className="text-lg font-bold text-gray-900">{room.code}</h1>
+            <p className="text-xs text-gray-600">
+              {Object.keys(room.players).length}{' '}
+              {Object.keys(room.players).length === 1 ? 'гравець' : 'гравців'}
+            </p>
+          </div>
+          <div className="w-10"></div> {/* Spacer for balance */}
+        </div>
       </div>
 
       {/* Content */}
@@ -164,7 +230,6 @@ export default function RoomPage({ params }: PageProps) {
           playerId={playerId}
           onVoteResult={handleVoteResult}
           onIncrementScore={handleIncrementScore}
-          onCopyRoomCode={handleCopyRoomCode}
         />
       )}
     </div>

@@ -43,7 +43,7 @@ export default function Tribunes({ queue, bench, players, teams }: TribunesProps
         <div className="bg-gradient-to-b from-gray-100 to-gray-50 rounded-lg p-3 shadow-sm">
           <div className="flex items-center gap-2 mb-2">
             <div className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
-              👥 Черга ({queueTeams.length} {queueTeams.length === 1 ? 'команда' : 'команди'})
+              Черга ({queueTeams.length} {queueTeams.length === 1 ? 'команда' : 'команди'})
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -69,10 +69,10 @@ export default function Tribunes({ queue, bench, players, teams }: TribunesProps
 
       {/* Bench - Individual players */}
       {benchPlayers.length > 0 && (
-        <div className="bg-gradient-to-b from-amber-50 to-yellow-50 rounded-lg p-3 shadow-sm border border-amber-200">
+        <div className="bg-gradient-to-b from-amber-50 to-orange-50 rounded-lg p-3 shadow-sm border border-amber-200">
           <div className="flex items-center gap-2 mb-2">
             <div className="text-xs font-semibold text-amber-800 uppercase tracking-wide">
-              🪑 Лава ({benchPlayers.length})
+              Лава ({benchPlayers.length})
             </div>
           </div>
           <div className="flex flex-wrap gap-3">

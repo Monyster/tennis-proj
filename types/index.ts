@@ -96,9 +96,9 @@ export interface UseRoomResult {
   currentPlayer: Player | null;
   pendingInvites: InviteWithId[];
 
-  // Actions (playerName is now optional - uses Firebase Auth displayName)
-  createRoom: (playerName?: string) => Promise<string>;
-  joinRoom: (code: string, playerName?: string) => Promise<boolean>;
+  // Actions (uses Firebase Auth displayName or generated name automatically)
+  createRoom: () => Promise<string>;
+  joinRoom: (code: string) => Promise<boolean>;
   leaveRoom: () => Promise<void>;
   sendInvite: (toPlayerId: string) => Promise<void>;
   acceptInvite: (inviteId: string) => Promise<void>;

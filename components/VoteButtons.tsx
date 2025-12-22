@@ -35,12 +35,11 @@ export function VoteButtons({
           disabled={hasVoted && championsVoting}
           className={`flex-1 px-6 py-4 rounded-lg font-medium transition-all ${
             championsVoting
-              ? 'bg-yellow-600 text-white border-2 border-yellow-700'
-              : 'bg-yellow-100 text-yellow-900 hover:bg-yellow-200 border-2 border-yellow-300'
-          } disabled:opacity-75 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2`}
+              ? 'bg-orange-600 text-white border-2 border-orange-700'
+              : 'bg-orange-100 text-orange-900 hover:bg-orange-200 border-2 border-orange-300'
+          } disabled:opacity-75 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2`}
         >
           <div className="flex flex-col items-center gap-1">
-            <span className="text-xl">🏆</span>
             <span>Чемпіони</span>
             {championsVoting && (
               <span className="text-sm">
@@ -60,7 +59,6 @@ export function VoteButtons({
           } disabled:opacity-75 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
         >
           <div className="flex flex-col items-center gap-1">
-            <span className="text-xl">🎯</span>
             <span>Претенденти</span>
             {challengersVoting && (
               <span className="text-sm">
@@ -75,7 +73,7 @@ export function VoteButtons({
         <div className="text-center text-sm text-gray-600">
           Голосів: {voteCount} з {requiredVotes} необхідних
           {hasVoted && (
-            <span className="ml-2 text-green-600 font-medium">✓ Ви проголосували</span>
+            <span className="ml-2 text-success-600 font-medium">Ви проголосували</span>
           )}
         </div>
       )}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ref, onValue, set, update, get } from 'firebase/database';
 import { db } from './firebase';
 import {
@@ -98,7 +98,7 @@ export function useRoom(roomCode: string | null): UseRoomResult {
    * Returns the room code
    * Requires user to be authenticated
    */
-  const createRoom = useCallback(async (playerName?: string): Promise<string> => {
+  const createRoom = useCallback(async (): Promise<string> => {
     if (!user) {
       throw new Error('Потрібна авторизація для створення кімнати');
     }
@@ -109,7 +109,7 @@ export function useRoom(roomCode: string | null): UseRoomResult {
 
     const playerData = createPlayerFromAuth(
       user.uid,
-      playerName || user.displayName,
+      user.displayName,
       user.photoURL,
       user.isAnonymous
     );
@@ -153,7 +153,7 @@ export function useRoom(roomCode: string | null): UseRoomResult {
    * Requires user to be authenticated
    */
   const joinRoom = useCallback(
-    async (code: string, playerName?: string): Promise<boolean> => {
+    async (code: string): Promise<boolean> => {
       if (!user) {
         throw new Error('Потрібна авторизація для приєднання до кімнати');
       }
@@ -177,7 +177,7 @@ export function useRoom(roomCode: string | null): UseRoomResult {
       const now = Date.now();
       const playerData = createPlayerFromAuth(
         user.uid,
-        playerName || user.displayName,
+        user.displayName,
         user.photoURL,
         user.isAnonymous
       );
@@ -263,6 +263,18 @@ export function useRoom(roomCode: string | null): UseRoomResult {
   const sendInvite = useCallback(
     async (toPlayerId: string): Promise<void> => {
       if (!room || !user) return;
+
+      // Check if invite already exists between these players
+      const existingInvite = Object.values(room.invites || {}).find(
+        (invite) =>
+          (invite.fromPlayerId === user.uid && invite.toPlayerId === toPlayerId) ||
+          (invite.fromPlayerId === toPlayerId && invite.toPlayerId === user.uid)
+      );
+
+      if (existingInvite) {
+        // Invite already exists, don't create duplicate
+        return;
+      }
 
       const inviteId = generateInviteId();
 

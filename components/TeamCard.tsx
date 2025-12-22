@@ -30,13 +30,13 @@ export function TeamCard({
 
   const variantStyles = {
     default: 'bg-white border-gray-300',
-    champions: 'bg-yellow-50 border-yellow-500',
+    champions: 'bg-orange-50 border-orange-500',
     challengers: 'bg-blue-50 border-blue-500',
   };
 
   const titleStyles = {
     default: 'text-gray-700',
-    champions: 'text-yellow-700',
+    champions: 'text-orange-700',
     challengers: 'text-blue-700',
   };
 
@@ -46,8 +46,8 @@ export function TeamCard({
     >
       {variant !== 'default' && (
         <div className={`text-sm font-semibold mb-2 ${titleStyles[variant]}`}>
-          {variant === 'champions' && '🏆 ЧЕМПІОНИ'}
-          {variant === 'challengers' && '🎯 ПРЕТЕНДЕНТИ'}
+          {variant === 'champions' && 'ЧЕМПІОНИ'}
+          {variant === 'challengers' && 'ПРЕТЕНДЕНТИ'}
         </div>
       )}
 
@@ -63,7 +63,7 @@ export function TeamCard({
         </div>
 
         {variant === 'champions' && winStreak !== undefined && winStreak > 0 && (
-          <p className="text-sm text-center text-yellow-700">
+          <p className="text-sm text-center text-orange-700">
             Серія перемог: {winStreak}
           </p>
         )}

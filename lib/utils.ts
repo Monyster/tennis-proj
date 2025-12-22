@@ -2,6 +2,58 @@ import { nanoid } from 'nanoid';
 import { Player, Team, RotationDecision, getServingTeam } from '@/types';
 
 /**
+ * List of adjectives for generating anonymous player names
+ */
+const ADJECTIVES = [
+  'Швидкий',
+  'Спритний',
+  'Сміливий',
+  'Вправний',
+  'Кмітливий',
+  'Завзятий',
+  'Точний',
+  'Могутній',
+  'Хитрий',
+  'Витончений',
+  'Дотепний',
+  'Відважний',
+  'Майстерний',
+  'Блискучий',
+  'Вдалий',
+];
+
+/**
+ * List of nouns for generating anonymous player names
+ */
+const NOUNS = [
+  'Панда',
+  'Дракон',
+  'Сокіл',
+  'Вовк',
+  'Лев',
+  'Тигр',
+  'Орел',
+  'Лис',
+  'Ведмідь',
+  'Кіт',
+  'Барс',
+  'Пантера',
+  'Гепард',
+  'Кобра',
+  'Акула',
+];
+
+/**
+ * Generate a unique anonymous player name
+ * Format: "Adjective Noun" (e.g., "Швидкий Дракон")
+ */
+export function generateAnonymousName(): string {
+  const adjective = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
+  const noun = NOUNS[Math.floor(Math.random() * NOUNS.length)];
+  return `${adjective} ${noun}`;
+}
+
+/**
  * Generate a unique room code in format PING-XXXX
  * where XXXX is a 4-digit number
  */
@@ -13,6 +65,7 @@ export function generateRoomCode(): string {
 /**
  * Create player object from Firebase Auth user
  * Firebase doesn't accept undefined, so we conditionally include photoURL
+ * Anonymous users get unique generated names
  */
 export function createPlayerFromAuth(
   uid: string,
@@ -20,15 +73,18 @@ export function createPlayerFromAuth(
   photoURL: string | null,
   isAnonymous: boolean
 ): Omit<Player, 'gamesPlayed' | 'satOutLast' | 'wins' | 'losses' | 'joinedAt'> {
-  const player: any = {
+  const player: Omit<Player, 'gamesPlayed' | 'satOutLast' | 'wins' | 'losses' | 'joinedAt'> = {
     id: uid,
-    name: displayName || (isAnonymous ? 'Гість' : 'Гравець'),
+    name: displayName || (isAnonymous ? generateAnonymousName() : 'Гравець'),
     isAnonymous,
   };
 
   // Only include photoURL if it exists (Firebase doesn't accept undefined)
   if (photoURL) {
-    player.photoURL = photoURL;
+    return {
+      ...player,
+      photoURL,
+    };
   }
 
   return player;

@@ -5,6 +5,7 @@ import { Room, MIN_PLAYERS } from '@/types';
 import { PlayerCard } from './PlayerCard';
 import { InviteModal } from './InviteModal';
 import { findPlayerTeam, getPartnerId } from '@/lib/utils';
+import EmptyTableView from './EmptyTableView';
 
 interface LobbyProps {
   room: Room;
@@ -59,41 +60,51 @@ export function Lobby({
     if (pendingInvites.length > 0 && !showInviteModal) {
       setShowInviteModal(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pendingInvites.length]); // Only trigger when invite count changes
+  }, [pendingInvites.length, showInviteModal]);
 
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Кімната: {room.code}
-          </h1>
-          <div className="flex gap-2">
-            {pendingInvites.length > 0 && (
-              <button
-                onClick={() => setShowInviteModal(true)}
-                className="relative px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+      {/* Empty Table Preview */}
+      <EmptyTableView />
+
+      {/* Pending Invites Notification */}
+      {pendingInvites.length > 0 && (
+        <div className="bg-blue-50 border-2 border-blue-500 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <svg
+                className="w-5 h-5 text-blue-600"
+                fill="currentColor"
+                viewBox="0 0 20 20"
               >
-                Запрошення
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                  {pendingInvites.length}
-                </span>
-              </button>
-            )}
+                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+              </svg>
+              <span className="font-medium text-blue-900">
+                У вас {pendingInvites.length}{' '}
+                {pendingInvites.length === 1 ? 'запрошення' : 'запрошень'}
+              </span>
+            </div>
             <button
-              onClick={onCopyRoomCode}
-              className="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors"
+              onClick={() => setShowInviteModal(true)}
+              className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
             >
-              Копіювати код
+              Переглянути
             </button>
           </div>
         </div>
-        <p className="text-gray-600">
-          Гравців: {playerCount} {canStart ? '✓' : `(мін. ${MIN_PLAYERS})`}
-        </p>
-      </div>
+      )}
+
+      {/* Player count info */}
+      {!canStart && (
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 text-center">
+          <p className="text-orange-800 font-medium">
+            Потрібно мінімум {MIN_PLAYERS} гравців для початку гри
+          </p>
+          <p className="text-sm text-orange-600 mt-1">
+            Зараз: {playerCount} {playerCount === 1 ? 'гравець' : 'гравців'}
+          </p>
+        </div>
+      )}
 
       {/* Teams */}
       {teams.length > 0 && (
@@ -176,16 +187,16 @@ export function Lobby({
       {isHost && (
         <div className="space-y-2">
           {!canStart && (
-            <p className="text-center text-sm text-red-600">
+            <p className="text-center text-sm text-error-600">
               Потрібно мінімум {MIN_PLAYERS} гравців для початку
             </p>
           )}
           <button
             onClick={onStartGame}
             disabled={!canStart}
-            className="w-full px-6 py-4 bg-green-600 text-white text-lg font-semibold rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full px-6 py-4 bg-success-600 text-white text-lg font-semibold rounded-lg hover:bg-success-700 focus:outline-none focus:ring-2 focus:ring-success-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            🎮 Почати гру
+            Почати гру
           </button>
         </div>
       )}

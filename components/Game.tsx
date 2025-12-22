@@ -1,19 +1,15 @@
 'use client';
 
-import { useState } from 'react';
 import { Room, MatchResult, VOTE_THRESHOLD } from '@/types';
 import { VoteButtons } from './VoteButtons';
-import { Stats } from './Stats';
 import TableView from './TableView';
 import Tribunes from './Tribunes';
-import UserProfile from './UserProfile';
 
 interface GameProps {
   room: Room;
   playerId: string;
   onVoteResult: (result: MatchResult) => void;
   onIncrementScore: (team: 'champions' | 'challengers') => void;
-  onCopyRoomCode: () => void;
 }
 
 /**
@@ -24,9 +20,7 @@ export function Game({
   playerId,
   onVoteResult,
   onIncrementScore,
-  onCopyRoomCode
 }: GameProps) {
-  const [showStats, setShowStats] = useState(false);
 
   if (!room.match) {
     return (
@@ -42,7 +36,7 @@ export function Game({
   if (!championsTeam || !challengersTeam) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-4">
-        <p className="text-center text-red-600 mt-20">Помилка: команди не знайдено</p>
+        <p className="text-center text-error-600 mt-20">Помилка: команди не знайдено</p>
       </div>
     );
   }
@@ -53,35 +47,6 @@ export function Game({
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-bold text-gray-900">{room.code}</h1>
-            <p className="text-xs text-gray-600">
-              {totalPlayers} {totalPlayers === 1 ? 'гравець' : 'гравців'}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowStats(true)}
-              className="p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
-              aria-label="Статистика"
-            >
-              📊
-            </button>
-            <button
-              onClick={onCopyRoomCode}
-              className="p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
-              aria-label="Копіювати код"
-            >
-              📋
-            </button>
-            <UserProfile />
-          </div>
-        </div>
-      </div>
-
       {/* Main Content */}
       <div className="pb-6">
         {/* Table Visualization */}
@@ -116,13 +81,6 @@ export function Game({
           </div>
         </div>
       </div>
-
-      {/* Stats Modal */}
-      <Stats
-        players={room.players}
-        isOpen={showStats}
-        onClose={() => setShowStats(false)}
-      />
     </div>
   );
 }
