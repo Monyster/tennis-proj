@@ -8,8 +8,7 @@ This is a Next.js 16 application built with:
 - **React 19** with TypeScript
 - **Tailwind CSS v4** for styling (using the new `@tailwindcss/postcss` plugin)
 - **App Router** architecture (Next.js app directory)
-- **ESLint** with Next.js and TypeScript configs
-# CLAUDE.md — Пінг-Понг з Друзями
+s# CLAUDE.md — Пінг-Понг з Друзями
 
 ## Огляд проекту
 
