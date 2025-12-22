@@ -9,7 +9,7 @@ interface GameProps {
   room: Room;
   playerId: string;
   onVoteResult: (result: MatchResult) => void;
-  onIncrementScore: (team: 'champions' | 'challengers') => void;
+  onUpdateScore: (team: 'champions' | 'challengers', addVal: number) => void;
 }
 
 /**
@@ -19,7 +19,7 @@ export function Game({
   room,
   playerId,
   onVoteResult,
-  onIncrementScore,
+  onUpdateScore,
 }: GameProps) {
 
   if (!room.match) {
@@ -55,7 +55,7 @@ export function Game({
           challengersTeam={challengersTeam}
           players={room.players}
           match={room.match}
-          onIncrementScore={onIncrementScore}
+          onUpdateScore={onUpdateScore}
         />
 
         {/* Tribunes (Queue & Bench) */}

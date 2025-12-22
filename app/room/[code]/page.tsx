@@ -25,20 +25,20 @@ export default function RoomPage({ params }: PageProps) {
 	const [showJoinModal, setShowJoinModal] = useState(false);
 	const [hasAttemptedJoin, setHasAttemptedJoin] = useState(false);
 
-	const {
-		room,
-		loading,
-		error,
-		playerId,
-		startGame,
-		voteResult,
-		incrementScore,
-		sendInvite,
-		acceptInvite,
-		declineInvite,
-		leaveRoom,
-		joinRoom,
-	} = useRoom(resolvedParams.code);
+  const {
+    room,
+    loading,
+    error,
+    playerId,
+    startGame,
+    voteResult,
+    updateScore,
+    sendInvite,
+    acceptInvite,
+    declineInvite,
+    leaveRoom,
+    joinRoom,
+  } = useRoom(resolvedParams.code);
 
 	const handleCopyRoomCode = async () => {
 		if (!room) return;
@@ -76,13 +76,13 @@ export default function RoomPage({ params }: PageProps) {
 		}
 	};
 
-	const handleIncrementScore = async (team: "champions" | "challengers") => {
-		try {
-			await incrementScore(team);
-		} catch (err) {
-			console.error("Error incrementing score:", err);
-		}
-	};
+  const handleUpdateScore = async (team: 'champions' | 'challengers', numVal: number) => {
+    try {
+      await updateScore(team, numVal);
+    } catch (err) {
+      console.error('Error incrementing score:', err);
+    }
+  };
 
 	const handleJoinRoom = async () => {
 		try {
@@ -213,24 +213,24 @@ export default function RoomPage({ params }: PageProps) {
 				</div>
 			</div>
 
-			{/* Content */}
-			{room.status === "lobby" ? (
-				<Lobby
-					room={room}
-					playerId={playerId}
-					onStartGame={handleStartGame}
-					onSendInvite={handleSendInvite}
-					onAcceptInvite={handleAcceptInvite}
-					onDeclineInvite={handleDeclineInvite}
-				/>
-			) : (
-				<Game
-					room={room}
-					playerId={playerId}
-					onVoteResult={handleVoteResult}
-					onIncrementScore={handleIncrementScore}
-				/>
-			)}
-		</div>
-	);
+      {/* Content */}
+      {room.status === 'lobby' ? (
+        <Lobby
+          room={room}
+          playerId={playerId}
+          onStartGame={handleStartGame}
+          onSendInvite={handleSendInvite}
+          onAcceptInvite={handleAcceptInvite}
+          onDeclineInvite={handleDeclineInvite}
+        />
+      ) : (
+        <Game
+          room={room}
+          playerId={playerId}
+          onVoteResult={handleVoteResult}
+          onUpdateScore={handleUpdateScore}
+        />
+      )}
+    </div>
+  );
 }
