@@ -23,7 +23,7 @@ import {
   createRandomTeams,
   whoStays,
   findPlayerTeam,
-  createPlayerFromAuth,
+  createPlayerFromAuth, clamp,
 } from './utils';
 import { useAuth } from './useAuth';
 
@@ -593,17 +593,20 @@ export function useRoom(roomCode: string | null): UseRoomResult {
    * Increment score for a team
    * Handles serving team changes and automatic game completion
    */
-  const incrementScore = useCallback(
-    async (team: 'champions' | 'challengers'): Promise<void> => {
+  const updateScore = useCallback(
+    async (team: 'champions' | 'challengers', addVal: number): Promise<void> => {
       if (!room || !room.match) return;
 
       const roomRef = ref(db, `rooms/${room.code}`);
       const match = room.match;
 
+      const [lowest, highest] = [match.challengersScore, match.championsScore].sort();
+      const wasDeuce = lowest >= 10 && highest >= 10;
+      const maxPossibleScore = wasDeuce ? lowest + 2 : 11
       const newChampionsScore =
-        team === 'champions' ? match.championsScore + 1 : match.championsScore;
+        clamp(team === 'champions' ? match.championsScore + addVal : match.championsScore, 0, maxPossibleScore);
       const newChallengersScore =
-        team === 'challengers' ? match.challengersScore + 1 : match.challengersScore;
+        clamp(team === 'challengers' ? match.challengersScore + addVal : match.challengersScore, 0, maxPossibleScore);
 
       // Calculate total scores including handicap
       const handicap = match.championWinStreak * 2;
@@ -663,6 +666,6 @@ export function useRoom(roomCode: string | null): UseRoomResult {
     declineInvite,
     startGame,
     voteResult,
-    incrementScore,
+    updateScore,
   };
 }

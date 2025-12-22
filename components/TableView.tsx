@@ -1,13 +1,14 @@
 'use client';
 
 import { Player, Team, Match } from '@/types';
+import SpinButtons from "@/components/SpinButtons";
 
 interface TableViewProps {
   championsTeam: Team;
   challengersTeam: Team;
   players: Record<string, Player>;
   match: Match;
-  onIncrementScore: (team: 'champions' | 'challengers') => void;
+  onUpdateScore: (team: 'champions' | 'challengers', addVal: number) => void;
 }
 
 /**
@@ -19,7 +20,7 @@ export default function TableView({
   challengersTeam,
   players,
   match,
-  onIncrementScore,
+  onUpdateScore,
 }: TableViewProps) {
   const champion1 = players[championsTeam.player1Id];
   const champion2 = players[championsTeam.player2Id];
@@ -112,12 +113,11 @@ export default function TableView({
               ЧЕМПІОНИ {match.championWinStreak > 0 && `(${match.championWinStreak})`}
             </div>
             <div className="flex items-center justify-center gap-2">
-              <button
-                onClick={() => onIncrementScore('champions')}
-                className="bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full h-8 w-8 flex items-center justify-center shadow-md transition"
-              >
-                +
-              </button>
+              <SpinButtons
+                onIncrement={() => onUpdateScore('champions', 1)}
+                onDecrement={() => onUpdateScore('champions', -1)}
+                bgColor='orange'
+              />
               <div className="text-5xl font-bold text-white tabular-nums">
                 {match.championsScore}
               </div>
@@ -141,12 +141,11 @@ export default function TableView({
               <div className="text-5xl font-bold text-white tabular-nums">
                 {match.challengersScore + handicap}
               </div>
-              <button
-                onClick={() => onIncrementScore('challengers')}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-full h-8 w-8 flex items-center justify-center shadow-md transition"
-              >
-                +
-              </button>
+              <SpinButtons
+                onIncrement={() => onUpdateScore('challengers', 1)}
+                onDecrement={() => onUpdateScore('challengers', -1)}
+                bgColor='blue'
+              />
             </div>
             {handicap > 0 && (
               <div className="text-xs text-gray-400 mt-1">

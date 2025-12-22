@@ -105,7 +105,7 @@ export interface UseRoomResult {
   declineInvite: (inviteId: string) => Promise<void>;
   startGame: () => Promise<void>;
   voteResult: (result: MatchResult) => Promise<void>;
-  incrementScore: (team: 'champions' | 'challengers') => Promise<void>;
+  updateScore: (team: 'champions' | 'challengers', addVal: number) => Promise<void>;
 }
 
 // Rotation logic types
