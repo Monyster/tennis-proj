@@ -1,9 +1,9 @@
 'use client';
 
-import { useRoom } from '@/lib/useRoom';
-import { isValidRoomCode, normalizeRoomCode } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useRoom } from '@/lib/useRoom';
+import { isValidRoomCode, normalizeRoomCode } from '@/lib/utils';
 
 /**
  * Custom hook for home page logic

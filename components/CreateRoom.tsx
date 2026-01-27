@@ -13,8 +13,8 @@ interface CreateRoomProps {
  */
 export default function CreateRoom({ onCreateRoom, isLoading }: CreateRoomProps) {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 space-y-4">
-      <Typography.H5 className="text-center">Створити</Typography.H5>
+    <div className="bg-[#1e2939] rounded-lg shadow-lg p-6 space-y-4 border border-[#9198a0]/20">
+      <Typography.H5 className="text-center text-[#fef4e5]">Створити</Typography.H5>
 
       <Button
         variant="primary"

@@ -1,6 +1,6 @@
 'use client';
 
-import { InviteWithId, Player } from '@/types';
+import type { InviteWithId, Player } from '@/types';
 
 interface InviteModalProps {
   invites: InviteWithId[];
@@ -31,9 +31,7 @@ export function InviteModal({
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
         <div className="text-center mb-6">
           <div className="text-5xl mb-3">🤝</div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Запрошення до команди
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900">Запрошення до команди</h2>
         </div>
 
         <div className="space-y-4">
@@ -47,8 +45,8 @@ export function InviteModal({
                 className="p-5 bg-blue-50 rounded-xl border-2 border-blue-200 shadow-sm"
               >
                 <p className="text-base text-gray-900 mb-4 text-center">
-                  <span className="font-bold text-blue-700">{fromPlayer.name}</span>{' '}
-                  запрошує вас до команди
+                  <span className="font-bold text-blue-700">{fromPlayer.name}</span> запрошує вас до
+                  команди
                 </p>
                 <div className="flex gap-3">
                   <button

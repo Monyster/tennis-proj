@@ -1,6 +1,6 @@
-import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
-import { Database, getDatabase } from 'firebase/database';
-import { Auth, getAuth } from 'firebase/auth';
+import { type FirebaseApp, getApps, initializeApp } from 'firebase/app';
+import { type Auth, getAuth } from 'firebase/auth';
+import { type Database, getDatabase } from 'firebase/database';
 
 // Firebase configuration from environment variables
 const firebaseConfig = {

@@ -1,4 +1,4 @@
-import { Player } from '@/types';
+import type { Player } from '@/types';
 
 interface PlayerCardProps {
   player: Player;
@@ -20,19 +20,13 @@ export function PlayerCard({
   return (
     <div
       className={`px-4 py-3 rounded-lg border-2 ${
-        isCurrentPlayer
-          ? 'border-blue-500 bg-blue-50'
-          : 'border-gray-300 bg-white'
+        isCurrentPlayer ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-white'
       }`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {player.photoURL ? (
-            <img
-              src={player.photoURL}
-              alt={player.name}
-              className="h-10 w-10 rounded-full"
-            />
+            <img src={player.photoURL} alt={player.name} className="h-10 w-10 rounded-full" />
           ) : (
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-300 text-sm font-medium text-gray-700">
               {player.isAnonymous ? '?' : player.name[0]?.toUpperCase()}
@@ -41,15 +35,9 @@ export function PlayerCard({
 
           <div>
             <div className="flex items-center gap-2">
-              <p className="font-medium text-gray-900">
-                {player.name}
-              </p>
-              {player.isAnonymous && (
-                <span className="text-xs text-amber-600">(гість)</span>
-              )}
-              {isCurrentPlayer && (
-                <span className="text-xs text-blue-600">(ти)</span>
-              )}
+              <p className="font-medium text-gray-900">{player.name}</p>
+              {player.isAnonymous && <span className="text-xs text-amber-600">(гість)</span>}
+              {isCurrentPlayer && <span className="text-xs text-blue-600">(ти)</span>}
             </div>
             <p className="text-sm text-gray-600">
               Ігор: {player.gamesPlayed} | В: {player.wins} | П: {player.losses}

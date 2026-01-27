@@ -1,10 +1,10 @@
 'use client';
 
-import { cn } from '@/lib/utils';
 import { Button as HeadlessButton } from '@headlessui/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
 import * as React from 'react';
+import { cn } from '@/lib/utils';
 import Typography from '../typography/typography';
 
 const baseClasses = cn(
@@ -30,10 +30,10 @@ const buttonVariants = cva(baseClasses, {
       icon: ['p-2', 'hover:bg-light-100'],
 
       primary: [
-        'bg-blue-600 fill-white text-white',
-        'hover:bg-blue-700',
-        'active:bg-blue-800',
-        'disabled:bg-blue-200 disabled:fill-light-200 disabled:stroke-light-200 disabled:text-light-200',
+        'bg-[#75db70] fill-[#101827] text-[#101827] font-medium',
+        'hover:bg-[#6bc965]',
+        'active:bg-[#5eb859]',
+        'disabled:bg-[#9198a0] disabled:fill-[#1e2939] disabled:stroke-[#1e2939] disabled:text-[#1e2939]',
       ],
       secondary: [
         'bg-main-100 fill-main-600 stroke-main-600 text-main-600',

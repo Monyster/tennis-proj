@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@/lib/useAuth';
 import { useState } from 'react';
+import { useAuth } from '@/lib/useAuth';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -102,10 +102,7 @@ export default function AuthModal({
           </button>
         </div>
 
-        <button
-          onClick={onClose}
-          className="mt-4 w-full text-sm text-gray-500 hover:text-gray-700"
-        >
+        <button onClick={onClose} className="mt-4 w-full text-sm text-gray-500 hover:text-gray-700">
           Скасувати
         </button>
 

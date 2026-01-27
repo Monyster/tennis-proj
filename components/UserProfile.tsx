@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@/lib/useAuth';
 import { useState } from 'react';
+import { useAuth } from '@/lib/useAuth';
 
 export default function UserProfile() {
   const { user, isAnonymous, upgradeAnonymousToGoogle, signOut } = useAuth();

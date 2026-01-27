@@ -59,9 +59,7 @@ export function RoomJoinModal({ roomCode, onJoin, onCancel }: RoomJoinModalProps
         {/* Header */}
         <div className="text-center mb-6">
           <div className="text-6xl mb-4">🎯</div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">
-            Приєднатися до гри
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">Приєднатися до гри</h2>
           <div className="inline-block px-5 py-3 bg-blue-600 rounded-xl shadow-md">
             <p className="text-xs text-blue-100 uppercase tracking-wide">Кімната</p>
             <p className="text-2xl font-mono font-bold text-white">{roomCode}</p>
@@ -110,12 +108,7 @@ export function RoomJoinModal({ roomCode, onJoin, onCancel }: RoomJoinModalProps
               onClick={handleAnonymousSignIn}
               className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gray-700 text-white font-semibold rounded-xl hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all shadow-md"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -165,9 +158,7 @@ export function RoomJoinModal({ roomCode, onJoin, onCancel }: RoomJoinModalProps
 
         {/* Footer */}
         <div className="mt-8 pt-6 border-t border-gray-200 text-center">
-          <p className="text-sm text-gray-500 font-medium">
-            Настільний теніс з автоматичною форою
-          </p>
+          <p className="text-sm text-gray-500 font-medium">Настільний теніс з автоматичною форою</p>
         </div>
       </div>
     </div>

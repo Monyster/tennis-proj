@@ -1,7 +1,7 @@
 'use client';
 
+import { type ReactNode, useEffect, useState } from 'react';
 import { useAuth } from '@/lib/useAuth';
-import { ReactNode, useState, useEffect } from 'react';
 import AuthModal from './AuthModal';
 
 interface AuthGuardProps {
@@ -40,19 +40,12 @@ export default function AuthGuard({ children, fallback }: AuthGuardProps) {
         {fallback || (
           <div className="flex min-h-screen items-center justify-center p-4">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Потрібна авторизація
-              </h2>
-              <p className="text-gray-600 mb-6">
-                Увійдіть, щоб продовжити
-              </p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Потрібна авторизація</h2>
+              <p className="text-gray-600 mb-6">Увійдіть, щоб продовжити</p>
             </div>
           </div>
         )}
-        <AuthModal
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-        />
+        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       </>
     );
   }

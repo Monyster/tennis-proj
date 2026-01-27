@@ -1,4 +1,4 @@
-import { Team, Player } from '@/types';
+import type { Player, Team } from '@/types';
 
 interface TeamCardProps {
   team: Team;
@@ -41,9 +41,7 @@ export function TeamCard({
   };
 
   return (
-    <div
-      className={`px-6 py-4 rounded-lg border-2 ${variantStyles[variant]}`}
-    >
+    <div className={`px-6 py-4 rounded-lg border-2 ${variantStyles[variant]}`}>
       {variant !== 'default' && (
         <div className={`text-sm font-semibold mb-2 ${titleStyles[variant]}`}>
           {variant === 'champions' && 'ЧЕМПІОНИ'}
@@ -53,19 +51,13 @@ export function TeamCard({
 
       <div className="space-y-2">
         <div className="flex items-center justify-center gap-2">
-          <span className="font-medium text-lg text-gray-900">
-            {player1.name}
-          </span>
+          <span className="font-medium text-lg text-gray-900">{player1.name}</span>
           <span className="text-gray-400">+</span>
-          <span className="font-medium text-lg text-gray-900">
-            {player2.name}
-          </span>
+          <span className="font-medium text-lg text-gray-900">{player2.name}</span>
         </div>
 
         {variant === 'champions' && winStreak !== undefined && winStreak > 0 && (
-          <p className="text-sm text-center text-orange-700">
-            Серія перемог: {winStreak}
-          </p>
+          <p className="text-sm text-center text-orange-700">Серія перемог: {winStreak}</p>
         )}
 
         {variant === 'challengers' && (handicap !== undefined || servingTeam !== undefined) && (
@@ -74,9 +66,7 @@ export function TeamCard({
               <p className="text-blue-700">Фора: +{handicap}</p>
             )}
             {servingTeam !== undefined && (
-              <p className="text-blue-700">
-                {servingTeam ? 'Подають вони' : 'Подають чемпіони'}
-              </p>
+              <p className="text-blue-700">{servingTeam ? 'Подають вони' : 'Подають чемпіони'}</p>
             )}
           </div>
         )}

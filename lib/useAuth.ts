@@ -1,15 +1,15 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
 import {
-  User,
-  signInWithPopup,
-  signInAnonymously,
   signOut as firebaseSignOut,
-  onAuthStateChanged,
   GoogleAuthProvider,
   linkWithPopup,
+  onAuthStateChanged,
+  signInAnonymously,
+  signInWithPopup,
+  type User,
 } from 'firebase/auth';
+import { useCallback, useEffect, useState } from 'react';
 import { firebaseAuth } from './firebase';
 
 export interface UseAuthResult {
@@ -44,7 +44,7 @@ export function useAuth(): UseAuthResult {
       (err) => {
         setError(err.message);
         setLoading(false);
-      }
+      },
     );
 
     return () => unsubscribe();

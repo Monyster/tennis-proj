@@ -1,9 +1,9 @@
 'use client';
 
-import { Room, MatchResult, VOTE_THRESHOLD } from '@/types';
-import { VoteButtons } from './VoteButtons';
+import { type MatchResult, type Room, VOTE_THRESHOLD } from '@/types';
 import TableView from './TableView';
 import Tribunes from './Tribunes';
+import { VoteButtons } from './VoteButtons';
 
 interface GameProps {
   room: Room;
@@ -15,17 +15,11 @@ interface GameProps {
 /**
  * Game component - displays active match with table visualization
  */
-export function Game({
-  room,
-  playerId,
-  onVoteResult,
-  onUpdateScore,
-}: GameProps) {
-
+export function Game({ room, playerId, onVoteResult, onUpdateScore }: GameProps) {
   if (!room.match) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-4">
-        <p className="text-center text-gray-600 mt-20">Матч не активний</p>
+      <div className="min-h-screen bg-[#101827] p-4">
+        <p className="text-center text-[#9198a0] mt-20">Матч не активний</p>
       </div>
     );
   }
@@ -35,8 +29,8 @@ export function Game({
 
   if (!championsTeam || !challengersTeam) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-4">
-        <p className="text-center text-error-600 mt-20">Помилка: команди не знайдено</p>
+      <div className="min-h-screen bg-[#101827] p-4">
+        <p className="text-center text-error-500 mt-20">Помилка: команди не знайдено</p>
       </div>
     );
   }
@@ -46,7 +40,7 @@ export function Game({
   const hasVoted = room.votes?.voters?.[playerId] === true;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-[#101827]">
       {/* Main Content */}
       <div className="pb-6">
         {/* Table Visualization */}

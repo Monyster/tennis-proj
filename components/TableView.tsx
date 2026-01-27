@@ -1,7 +1,7 @@
 'use client';
 
-import { Player, Team, Match } from '@/types';
-import SpinButtons from "@/components/SpinButtons";
+import SpinButtons from '@/components/SpinButtons';
+import type { Match, Player, Team } from '@/types';
 
 interface TableViewProps {
   championsTeam: Team;
@@ -31,7 +31,7 @@ export default function TableView({
 
   // Calculate total scores for serving logic
   const totalPoints = match.championsScore + match.challengersScore;
-  const isDeuce = (match.championsScore >= 10 && match.challengersScore >= 10);
+  const isDeuce = match.championsScore >= 10 && match.challengersScore >= 10;
 
   // Determine who serves based on table tennis doubles rules with diagonal rotation
   // Points 0-1: Champion 1 serves (2 serves)
@@ -60,19 +60,14 @@ export default function TableView({
     isChampionsServing = true;
     championServingPlayerIndex = 1; // Champion 2
     challengerServingPlayerIndex = 0; // unused
-  } else { // servingRotation === 3
+  } else {
+    // servingRotation === 3
     isChampionsServing = false;
     championServingPlayerIndex = 0; // unused
     challengerServingPlayerIndex = 0; // Challenger 1
   }
 
-  const PlayerAvatar = ({
-    player,
-    isServing
-  }: {
-    player: Player;
-    isServing: boolean;
-  }) => (
+  const PlayerAvatar = ({ player, isServing }: { player: Player; isServing: boolean }) => (
     <div className="flex flex-col items-center gap-1 relative">
       {isServing && (
         <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-orange-400 text-orange-900 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md z-10 whitespace-nowrap">
@@ -88,11 +83,13 @@ export default function TableView({
           }`}
         />
       ) : (
-        <div className={`flex h-12 w-12 items-center justify-center rounded-full border-2 shadow-md text-sm font-medium ${
-          isServing
-            ? 'border-orange-400 ring-2 ring-orange-300 bg-orange-100 text-orange-900'
-            : 'border-white bg-gray-300 text-gray-700'
-        }`}>
+        <div
+          className={`flex h-12 w-12 items-center justify-center rounded-full border-2 shadow-md text-sm font-medium ${
+            isServing
+              ? 'border-orange-400 ring-2 ring-orange-300 bg-orange-100 text-orange-900'
+              : 'border-white bg-gray-300 text-gray-700'
+          }`}
+        >
           {player.isAnonymous ? '?' : player.name[0]?.toUpperCase()}
         </div>
       )}
@@ -116,16 +113,14 @@ export default function TableView({
               <SpinButtons
                 onIncrement={() => onUpdateScore('champions', 1)}
                 onDecrement={() => onUpdateScore('champions', -1)}
-                bgColor='orange'
+                bgColor="orange"
               />
               <div className="text-5xl font-bold text-white tabular-nums">
                 {match.championsScore}
               </div>
             </div>
             {handicap > 0 && (
-              <div className="text-xs text-gray-400 mt-1">
-                Фора претендентів: +{handicap}
-              </div>
+              <div className="text-xs text-gray-400 mt-1">Фора претендентів: +{handicap}</div>
             )}
           </div>
 
@@ -134,9 +129,7 @@ export default function TableView({
 
           {/* Challengers Score */}
           <div className="flex-1 text-center">
-            <div className="text-xs text-blue-300 mb-1 font-semibold">
-              ПРЕТЕНДЕНТИ
-            </div>
+            <div className="text-xs text-blue-300 mb-1 font-semibold">ПРЕТЕНДЕНТИ</div>
             <div className="flex items-center justify-center gap-2">
               <div className="text-5xl font-bold text-white tabular-nums">
                 {match.challengersScore + handicap}
@@ -144,13 +137,11 @@ export default function TableView({
               <SpinButtons
                 onIncrement={() => onUpdateScore('challengers', 1)}
                 onDecrement={() => onUpdateScore('challengers', -1)}
-                bgColor='blue'
+                bgColor="blue"
               />
             </div>
             {handicap > 0 && (
-              <div className="text-xs text-gray-400 mt-1">
-                Без фори: {match.challengersScore}
-              </div>
+              <div className="text-xs text-gray-400 mt-1">Без фори: {match.challengersScore}</div>
             )}
           </div>
         </div>

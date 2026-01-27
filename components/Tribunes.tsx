@@ -1,6 +1,6 @@
 'use client';
 
-import { Player, Team } from '@/types';
+import type { Player, Team } from '@/types';
 
 interface TribunesProps {
   queue: string[];
@@ -30,9 +30,7 @@ export default function Tribunes({ queue, bench, players, teams }: TribunesProps
           {player.isAnonymous ? '?' : player.name[0]?.toUpperCase()}
         </div>
       )}
-      <span className="text-[10px] text-gray-600 max-w-[50px] truncate">
-        {player.name}
-      </span>
+      <span className="text-[10px] text-gray-600 max-w-[50px] truncate">{player.name}</span>
     </div>
   );
 

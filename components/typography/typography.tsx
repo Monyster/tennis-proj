@@ -1,6 +1,6 @@
-import { cn } from '@/lib/utils';
 import { Inter } from 'next/font/google';
-import { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 const familyMainFont = Inter({
   subsets: ['latin'],

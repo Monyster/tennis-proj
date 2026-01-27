@@ -113,5 +113,5 @@ window.devTools = {
   changePlayerName,
   deleteRoom,
   getRoomData,
-  help
+  help,
 };

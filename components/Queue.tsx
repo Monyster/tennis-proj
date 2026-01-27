@@ -1,4 +1,4 @@
-import { Team, Player } from '@/types';
+import type { Player, Team } from '@/types';
 
 interface QueueProps {
   queue: string[];
@@ -16,9 +16,7 @@ export function Queue({ queue, teams, players }: QueueProps) {
 
   return (
     <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-      <h3 className="text-sm font-semibold text-gray-700 mb-3">
-        Черга ({queue.length})
-      </h3>
+      <h3 className="text-sm font-semibold text-gray-700 mb-3">Черга ({queue.length})</h3>
       <div className="space-y-2">
         {queue.map((teamId, index) => {
           const team = teams[teamId];
@@ -34,9 +32,7 @@ export function Queue({ queue, teams, players }: QueueProps) {
               key={teamId}
               className="flex items-center gap-2 px-3 py-2 bg-white rounded border border-gray-200"
             >
-              <span className="text-xs font-medium text-gray-500 w-6">
-                {index + 1}.
-              </span>
+              <span className="text-xs font-medium text-gray-500 w-6">{index + 1}.</span>
               <span className="text-sm text-gray-900">
                 {player1.name} + {player2.name}
               </span>

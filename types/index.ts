@@ -113,3 +113,25 @@ export interface RotationDecision {
   stays: string;
   leaves: string;
 }
+
+// Global Stats types (cross-room statistics)
+export interface GlobalStats {
+  totalWins: number;
+  totalLosses: number;
+  gamesPlayed: number;
+  lastPlayed: number;
+}
+
+export interface UserProfile {
+  displayName: string;
+  photoURL?: string;
+  globalStats: GlobalStats;
+}
+
+// Default empty stats
+export const EMPTY_GLOBAL_STATS: GlobalStats = {
+  totalWins: 0,
+  totalLosses: 0,
+  gamesPlayed: 0,
+  lastPlayed: 0,
+};

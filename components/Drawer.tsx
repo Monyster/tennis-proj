@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Room } from '@/types';
+import type { Room } from '@/types';
 import { Stats } from './Stats';
 import UserProfile from './UserProfile';
 
@@ -32,12 +32,7 @@ export function Drawer({ room, onLeaveRoom, onCopyRoomCode }: DrawerProps) {
         className="p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
         aria-label="Меню"
       >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -69,12 +64,7 @@ export function Drawer({ room, onLeaveRoom, onCopyRoomCode }: DrawerProps) {
               onClick={() => setIsOpen(false)}
               className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -95,9 +85,7 @@ export function Drawer({ room, onLeaveRoom, onCopyRoomCode }: DrawerProps) {
             <div className="p-4 border-b border-gray-200 bg-gray-50">
               <div className="text-sm text-gray-600 mb-1">Кімната</div>
               <div className="flex items-center justify-between">
-                <div className="text-lg font-mono font-bold text-gray-900">
-                  {room.code}
-                </div>
+                <div className="text-lg font-mono font-bold text-gray-900">{room.code}</div>
                 {onCopyRoomCode && (
                   <button
                     onClick={() => {
@@ -150,12 +138,7 @@ export function Drawer({ room, onLeaveRoom, onCopyRoomCode }: DrawerProps) {
                   }}
                   className="w-full flex items-center gap-3 px-4 py-3 text-left text-red-600 hover:bg-red-50 rounded-lg transition mt-2"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -180,11 +163,7 @@ export function Drawer({ room, onLeaveRoom, onCopyRoomCode }: DrawerProps) {
 
       {/* Stats Modal */}
       {room && (
-        <Stats
-          players={room.players}
-          isOpen={showStats}
-          onClose={() => setShowStats(false)}
-        />
+        <Stats players={room.players} isOpen={showStats} onClose={() => setShowStats(false)} />
       )}
     </>
   );

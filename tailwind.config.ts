@@ -15,26 +15,38 @@ const config: Config = {
       },
       colors: {
         background: {
-          default: '#ffffff',
-        },
-        foreground: {
-          default: '#111827',
+          default: '#101827',
+          section: '#1e2939',
         },
 
+        accent: {
+          primary: '#75db70',
+        },
+
+        text: {
+          primary: '#fef4e5',
+          secondary: '#9198a0',
+        },
+
+        // Keep orange/blue for champions/challengers (game semantics)
         orange: {
           50: '#FFF7ED',
           100: '#FFEDD5',
+          400: '#FB923C',
           500: '#F97316',
           600: '#EA580C',
           700: '#C2410C',
+          900: '#7C2D12',
         },
 
         blue: {
           50: '#EFF6FF',
           100: '#DBEAFE',
+          400: '#60A5FA',
           500: '#3B82F6',
           600: '#2563EB',
           700: '#1D4ED8',
+          900: '#1E3A8A',
         },
 
         gray: {
@@ -46,6 +58,7 @@ const config: Config = {
           500: '#6B7280',
           600: '#4B5563',
           700: '#374151',
+          800: '#1F2937',
           900: '#111827',
         },
 
@@ -111,8 +124,9 @@ const config: Config = {
           }
 
           // Handle "default" like "red.default" -> "red"
-          if (themeColors[color]?.default) {
-            return themeColors[color].default;
+          const colorValue = themeColors[color] as Record<string, unknown> | undefined;
+          if (colorValue && 'default' in colorValue) {
+            return colorValue.default as string;
           }
 
           return color;

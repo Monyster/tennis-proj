@@ -1,48 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  /* Base */
-  --background: #ffffff;
-  --foreground: #111827;
+  /* Dark Theme Base */
+  --background: #101827;
+  --background-section: #1e2939;
+
+  /* Accent */
+  --accent-primary: #75db70;
+
+  /* Text */
+  --text-primary: #fef4e5;
+  --text-secondary: #9198a0;
 
   /* Orange - Champions */
-  --orange-50: #FFF7ED;
-  --orange-100: #FFEDD5;
-  --orange-500: #F97316;
-  --orange-600: #EA580C;
-  --orange-700: #C2410C;
+  --orange-400: #fb923c;
+  --orange-500: #f97316;
+  --orange-600: #ea580c;
+  --orange-700: #c2410c;
+  --orange-900: #7c2d12;
 
-  /* Blue - Challengers & Primary Actions */
-  --blue-50: #EFF6FF;
-  --blue-100: #DBEAFE;
-  --blue-500: #3B82F6;
-  --blue-600: #2563EB;
-  --blue-700: #1D4ED8;
+  /* Blue - Challengers */
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --blue-900: #1e3a8a;
 
-  /* Gray - Neutral, Text, Borders */
-  --gray-50: #F9FAFB;
-  --gray-100: #F3F4F6;
-  --gray-200: #E5E7EB;
-  --gray-300: #D1D5DB;
-  --gray-400: #9CA3AF;
-  --gray-500: #6B7280;
-  --gray-600: #4B5563;
+  /* Gray - Neutral, Borders */
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
   --gray-700: #374151;
+  --gray-800: #1f2937;
   --gray-900: #111827;
 
   /* Success */
-  --success-50: #F0FDF4;
-  --success-500: #22C55E;
-  --success-600: #16A34A;
+  --success-500: #22c55e;
+  --success-600: #16a34a;
 
   /* Error */
-  --error-50: #FEF2F2;
-  --error-500: #EF4444;
-  --error-600: #DC2626;
+  --error-500: #ef4444;
+  --error-600: #dc2626;
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--text-primary);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }

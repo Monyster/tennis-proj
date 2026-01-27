@@ -1,6 +1,6 @@
 'use client';
 
-import { MatchResult, Vote } from '@/types';
+import type { MatchResult, Vote } from '@/types';
 
 interface VoteButtonsProps {
   votes: Vote;
@@ -13,21 +13,14 @@ interface VoteButtonsProps {
  * Voting buttons for match results
  * Shows vote progress and handles voting logic
  */
-export function VoteButtons({
-  votes,
-  requiredVotes,
-  onVote,
-  hasVoted,
-}: VoteButtonsProps) {
+export function VoteButtons({ votes, requiredVotes, onVote, hasVoted }: VoteButtonsProps) {
   const voteCount = Object.keys(votes.voters).length;
   const championsVoting = votes.pendingResult === 'champions';
   const challengersVoting = votes.pendingResult === 'challengers';
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-900 text-center">
-        Хто переміг?
-      </h3>
+      <h3 className="text-lg font-semibold text-gray-900 text-center">Хто переміг?</h3>
 
       <div className="flex gap-4">
         <button
@@ -72,9 +65,7 @@ export function VoteButtons({
       {votes.pendingResult && (
         <div className="text-center text-sm text-gray-600">
           Голосів: {voteCount} з {requiredVotes} необхідних
-          {hasVoted && (
-            <span className="ml-2 text-success-600 font-medium">Ви проголосували</span>
-          )}
+          {hasVoted && <span className="ml-2 text-success-600 font-medium">Ви проголосували</span>}
         </div>
       )}
     </div>
